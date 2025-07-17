@@ -3,29 +3,43 @@
 
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); // Reset error state
+    setError(null);
 
+    // Dapatkan callbackUrl dari URL
+    const callbackUrl = searchParams.get('callbackUrl') || '/dashboard/users';
+
+    // Perubahan KRUSIAL di sini:
+    // next-auth/react/signIn kadang menerima callbackUrl sebagai properti terpisah,
+    // atau sebagai bagian dari object options. Kita akan coba cara yang paling eksplisit.
     const result = await signIn('credentials', {
-      redirect: false, // Jangan redirect otomatis, kita akan handle secara manual
+      redirect: false,
       email,
       password,
+      // Hapus callbackUrl di sini jika sebelumnya ada:
+      // callbackUrl, // <<< HAPUS BARIS INI JIKA ADA
+
+      // Dan pastikan ini adalah cara kita mengarahkan setelah login berhasil:
     });
 
     if (result?.error) {
       setError(result.error);
       console.error("Login Error:", result.error);
     } else if (result?.ok) {
-      router.push('/'); // Redirect ke halaman utama setelah login berhasil
+      // Pastikan router.push adalah redirect UTAMA kita
+      // Coba lakukan console log untuk memastikan callbackUrl benar
+      console.log('Login successful. Redirecting to:', callbackUrl);
+      router.push(callbackUrl);
     }
   };
 

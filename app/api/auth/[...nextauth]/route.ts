@@ -1,6 +1,6 @@
 // app/api/auth/[...nextauth]/route.ts
 import NextAuth from "next-auth";
-import { AuthOptions } from "next-auth"; // Pastikan ini diimpor
+import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
@@ -8,7 +8,7 @@ import * as bcrypt from "bcrypt-ts";
 
 const prisma = new PrismaClient();
 
-export const authOptions: AuthOptions = { // Pastikan AuthOptions digunakan di sini
+export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma) as AuthOptions['adapter'],
   providers: [
     CredentialsProvider({
@@ -59,7 +59,7 @@ export const authOptions: AuthOptions = { // Pastikan AuthOptions digunakan di s
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.role = user.role; // Sekarang TypeScript sudah tahu user punya properti role
+        token.role = user.role;
       }
       return token;
     },
@@ -77,6 +77,7 @@ export const authOptions: AuthOptions = { // Pastikan AuthOptions digunakan di s
   secret: process.env.NEXTAUTH_SECRET,
 };
 
+// KEMBALIKAN KE POLA EKSPOR HANDLER V4 YANG AWAL:
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
