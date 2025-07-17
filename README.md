@@ -62,5 +62,5 @@ Pastikan Anda telah menginstal:
 ### 1. Kloning Repositori
 
 ```bash
-git clone [https://github.com/RezaPahlevii/rekapin-app.git]
+git clone https://github.com/RezaPahlevii/rekapin-app.git
 cd rekapin-app
