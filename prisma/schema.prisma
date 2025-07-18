@@ -43,10 +43,12 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  password      String? // Tambahkan field password untuk Credentials Provider
-  role          String    @default("ADMIN") // Default role. Akan kita gunakan untuk role-based access.
+  password      String?
+  role          String    @default("ADMIN")
   accounts      Account[]
   sessions      Session[]
+  // PERBAIKAN DI SINI: Tambahkan nama relasi
+  attendances   Attendance[] @relation(name: "UserAttendance")
 }
 
 model VerificationToken {
@@ -55,4 +57,25 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// Model untuk Absensi Harian
+model Attendance {
+  id              String    @id @default(cuid())
+  userId          String
+  // PERBAIKAN DI SINI: Tambahkan nama relasi pada sisi Attendance
+  user            User      @relation(name: "UserAttendance", fields: [userId], references: [id])
+  date            DateTime
+  timeInMorning   DateTime?
+  timeOutNoon     DateTime?
+  timeInAfternoon DateTime?
+  timeOutEvening  DateTime?
+  actualHoursWorked Float?
+  overtimeHours   Float?
+  notes           String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([userId, date])
 }

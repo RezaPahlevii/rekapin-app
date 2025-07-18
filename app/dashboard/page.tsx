@@ -1,5 +1,5 @@
 // app/dashboard/page.tsx
-'use client'; // Opsional, tapi seringkali dashboard membutuhkan client-side interactivity
+'use client';
 
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -25,6 +25,10 @@ export default function DashboardPage() {
                 Kelola Pengguna
               </Link>
             )}
+            {/* Tombol Navigasi Baru untuk Absensi */}
+            <Link href="/dashboard/attendance/new" className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+              Input Absensi Harian
+            </Link>
             {/* Link-link dashboard lainnya bisa ditambahkan di sini sesuai role */}
             <Link href="/" className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
               Kembali ke Beranda
