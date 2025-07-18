@@ -1,11 +1,15 @@
 // app/dashboard/users/page.tsx
-import { PrismaClient } from '@prisma/client'; // Import PrismaClient
+import { PrismaClient } from '@prisma/client';
+import Link from 'next/link';
+// Hapus import useRouter dan revalidatePath di sini
+// import { useRouter } from 'next/navigation'; // <<< HAPUS BARIS INI
+// import { revalidatePath } from 'next/cache'; // <<< HAPUS BARIS INI
 
-const prisma = new PrismaClient(); // Inisialisasi PrismaClient
+import UserActions from '@/app/components/UserActions'; // Import Client Component UserActions
+
+const prisma = new PrismaClient();
 
 export default async function UserManagementPage() {
-  // Ambil semua user dari database
-  // Di Next.js Server Components, ini akan dijalankan di server
   const users = await prisma.user.findMany({
     select: {
       id: true,
@@ -17,7 +21,12 @@ export default async function UserManagementPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Manajemen Pengguna</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">Manajemen Pengguna</h1>
+        <Link href="/dashboard/users/new" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md">
+          Tambah Pengguna
+        </Link>
+      </div>
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
         <table className="min-w-full leading-normal">
           <thead>
@@ -52,9 +61,7 @@ export default async function UserManagementPage() {
                   </span>
                 </td>
                 <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                  {/* Tombol aksi akan ditambahkan di sini */}
-                  <button className="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
-                  <button className="text-red-600 hover:text-red-900">Hapus</button>
+                  <UserActions userId={user.id} />
                 </td>
               </tr>
             ))}
